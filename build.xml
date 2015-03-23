@@ -1,0 +1,32 @@
+<project name="FakeLocalPortFilter" default="dist">
+
+    <property name="lib.dir" value="/usr/share/tomcat6/lib"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}">
+            <include name="servlet-api.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init">
+        <mkdir dir="build"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src" destdir="build/classes" includeantruntime="false">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile">
+        <mkdir dir="build/jar"/>
+        <jar destfile="build/jar/FakeLocalPortFilter.jar" basedir="build/classes">
+        </jar>
+    </target>
+
+</project>
