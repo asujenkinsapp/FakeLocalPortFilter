@@ -1,0 +1,19 @@
+Tomcat filter to change the output of getLocalPort with a paramter.
+
+
+Add to web.xml:
+
+    <filter>
+        <filter-name>FakeLocalPortFilter</filter-name>
+        <filter-class>
+            edu.asu.uto.ops.filters.FakeLocalPortFilter
+        </filter-class>
+        <init-param>
+            <param-name>port</param-name>
+            <param-value>83</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>FakeLocalPortFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
