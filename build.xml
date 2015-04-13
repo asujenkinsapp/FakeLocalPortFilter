@@ -1,32 +1,41 @@
-<project name="FakeLocalPortFilter" default="dist">
+<project name="FakeLocalPortFilter" default="dist" xmlns:ivy="antlib:org.apache.ivy.ant">
 
     <property name="lib.dir" value="/usr/share/tomcat6/lib"/>
-
-    <path id="classpath">
-        <fileset dir="${lib.dir}">
-            <include name="servlet-api.jar"/>
-        </fileset>
-    </path>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir" value="${build.dir}/jar"/>
 
     <target name="init">
-        <mkdir dir="build"/>
+        <mkdir dir="${build.dir}"/>
     </target>
 
     <target name="clean">
-        <delete dir="build"/>
+        <delete dir="${build.dir}"/>
     </target>
 
-    <target name="compile" depends="init">
-        <mkdir dir="build/classes"/>
-        <javac source="1.6" target="1.6" srcdir="src" destdir="build/classes" includeantruntime="false">
-            <classpath refid="classpath"/>
+     <target name="resolve">
+        <ivy:retrieve/>
+	<ivy:resolve/>
+	<ivy:cachepath pathid="classpath"/>
+     </target>    
+
+     <target name="report" depends="resolve">
+        <ivy:report todir="${build.dir}"/>
+     </target>
+		        
+    <target name="compile" depends="init,report">
+        <mkdir dir="${classes.dir}"/>
+	<javac source="1.6" target="1.6" srcdir="src" destdir="${classes.dir}" includeantruntime="false">
+	   <classpath refid="classpath"/>
         </javac>
     </target>
 
     <target name="dist" depends="compile">
-        <mkdir dir="build/jar"/>
-        <jar destfile="build/jar/FakeLocalPortFilter.jar" basedir="build/classes">
+        <mkdir dir="${jar.dir}"/>
+	<jar destfile="${jar.dir}/FakeLocalPortFilter.jar" basedir="${classes.dir}">
         </jar>
     </target>
+
+    <target name="main" depends="clean,dist"/>
 
 </project>
